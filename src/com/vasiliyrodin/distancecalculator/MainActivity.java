@@ -1,13 +1,9 @@
 package com.vasiliyrodin.distancecalculator;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
