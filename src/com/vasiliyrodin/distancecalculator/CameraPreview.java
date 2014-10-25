@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	
+	private static final String TAG = "CameraPreview";
 	SurfaceHolder mHolder;
 	private Camera mCamera;
 	private List<Size> mSupportedPreviewSizes;
@@ -48,12 +49,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
+		Log.d(TAG, "surfaceCreated Entered");
 		try {
             if (mCamera != null) {
                 mCamera.setPreviewDisplay(holder);
             }
         } catch (IOException exception) {
-            Log.e("CameraPreview", "IOException caused by setPreviewDisplay()", exception);
+            Log.e(TAG, "IOException caused by setPreviewDisplay()", exception);
         }
 		
 	}
@@ -61,7 +63,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-
+		Log.d(TAG, "surfaceChanged Entered");
 		if (mCamera == null)
 			return;
 
@@ -88,12 +90,14 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		Log.d(TAG, "surfaceDestroyed Entered");
 		if(mCamera != null) {
 			mCamera.stopPreview();
 		}
 		
 	}
 	public void setCamera(Camera camera) {
+		Log.d(TAG, "setCamera Entered");
 		if (mCamera == camera) { return; }
 		
 		stopPreviewAndFreeCamera();
@@ -108,10 +112,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	private void stopPreviewAndFreeCamera() {
+		Log.d(TAG, "stopPreviewAndFreeCamera Entered");
 		if(mCamera != null) {
 			mCamera.stopPreview();
 			
-			mCamera.release();
+			//mCamera.release();
 			mCamera = null;
 		}
 	}

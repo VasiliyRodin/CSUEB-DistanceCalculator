@@ -10,20 +10,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends Activity {
+	private static final String TAG = "MainActivity";
 	private Camera mCamera;
 	private CameraPreview mPreview;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	Log.d(TAG, "onCreate Entered");
         super.onCreate(savedInstanceState);
         //mPreview = new CameraPreview(this);
         //setContentView(mPreview);
         setContentView(R.layout.activity_main);
-        mPreview = (CameraPreview) findViewById(R.id.cameraPreview);
-        
+        mPreview = (CameraPreview) findViewById(R.id.cameraPreview);    
     }
     
 	private boolean safeCameraOpen() {
+		Log.d(TAG, "safeCameraOpen Entered");
 		boolean qOpened = false;
 		
 		try {
@@ -35,9 +37,11 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 		return qOpened;
+		
 	}
 	
 	private void releaseCameraAndPreview() {
+		Log.d(TAG, "releaseCameraAndPreview Entered");
 		mPreview.setCamera(null);
 		if (mCamera != null) {
 			mCamera.release();
@@ -47,9 +51,21 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onResume() {
+		Log.d(TAG, "onResume Entered");
 		super.onResume();
 		safeCameraOpen();
         mPreview.setCamera(mCamera);
 	}
+	
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Because the Camera object is a shared resource, it's very
+        // important to release it when the activity is paused.
+        releaseCameraAndPreview();
+        
+    }
+
 }
 
