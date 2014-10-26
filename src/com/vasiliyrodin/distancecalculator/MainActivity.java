@@ -6,8 +6,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.widget.TextView;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 
 public class MainActivity extends Activity implements SensorEventListener {
@@ -19,6 +21,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private SensorManager mSensorManager;
 	private Sensor accelerometer;
 	private Sensor magnetometer;
+	private TextView mDistanceText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         mPreview = (CameraPreview) findViewById(R.id.cameraPreview); 
-        
+        mDistanceText = (TextView) findViewById(R.id.distance);
         // get accelerometer and magnetometer sensors
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -102,7 +105,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		      if (success) {
 		        float orientation[] = new float[3];
 		        SensorManager.getOrientation(R, orientation);
-		        Log.d(TAG, "Orientation = " + orientation[0] + " " + orientation[1] + " " + orientation[2]);
+		        mDistanceText.setText(String.valueOf(orientation[2]*180/Math.PI));
+		        //Log.d(TAG, "Orientation = " + orientation[0] + " " + orientation[1] + " " + orientation[2]);
 		        //azimut = orientation[0]; // orientation contains: azimut, pitch and roll
 		      }
 		 }
