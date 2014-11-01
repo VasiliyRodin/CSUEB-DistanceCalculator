@@ -26,6 +26,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private Sensor accelerometer;
 	private Sensor magnetometer;
 	private TextView mDistanceText;
+	private double height = 5; 
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,7 +115,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 		      if (success) {
 		        float orientation[] = new float[3];
 		        SensorManager.getOrientation(R, orientation);
-		        mDistanceText.setText(String.valueOf(orientation[2]*180/Math.PI));
+		        
+		        //Calculate the distance
+		        double distance = height*Math.tan(Math.abs(orientation[2]));
+		        mDistanceText.setText(String.valueOf(distance));
 		        //Log.d(TAG, "Orientation = " + orientation[0] + " " + orientation[1] + " " + orientation[2]);
 		        //azimut = orientation[0]; // orientation contains: azimut, pitch and roll
 		      }
@@ -125,10 +129,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(requestCode == REQUEST_CODE) {
 			if(resultCode == RESULT_OK) {
-				Toast.makeText(this, data.getData().toString(), Toast.LENGTH_SHORT).show();
+				height = Double.valueOf(data.getData().toString());
 			}
 		}
 	}
+	
+	
 
 }
 
