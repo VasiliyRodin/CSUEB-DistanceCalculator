@@ -7,13 +7,17 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.content.Intent;
+import android.view.View;
 
 public class MainActivity extends Activity implements SensorEventListener {
 	private static final String TAG = "MainActivity";
+	private static final int REQUEST_CODE = 1;
 	private Camera mCamera;
 	private CameraPreview mPreview;
 	private float[] mGravity;
@@ -22,7 +26,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private Sensor accelerometer;
 	private Sensor magnetometer;
 	private TextView mDistanceText;
-
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	Log.d(TAG, "onCreate Entered");
@@ -39,6 +43,11 @@ public class MainActivity extends Activity implements SensorEventListener {
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
     }
+    
+    public void onClickHeight(View view){
+    	startActivityForResult(new Intent("com.vasiliyrodin.distancecalculator.InputHeight"),REQUEST_CODE);
+    }    
+    
     
 	private boolean safeCameraOpen() {
 		Log.d(TAG, "safeCameraOpen Entered");
@@ -110,6 +119,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 		        //azimut = orientation[0]; // orientation contains: azimut, pitch and roll
 		      }
 		 }
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == REQUEST_CODE) {
+			if(resultCode == RESULT_OK) {
+				Toast.makeText(this, data.getData().toString(), Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 }

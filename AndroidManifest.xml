@@ -24,6 +24,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:label="Input Height"
+            android:name=".InputHeight" >            
+            <intent-filter>
+                <action android:name="com.vasiliyrodin.distancecalculator.InputHeight" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

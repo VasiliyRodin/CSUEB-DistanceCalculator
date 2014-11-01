@@ -18,7 +18,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="@string/Height"
-        android:textColor="#ffffff" />
+        android:textColor="#ffffff"
+        android:onClick="onClickHeight" />
 
     <TextView
         android:id="@+id/distance"

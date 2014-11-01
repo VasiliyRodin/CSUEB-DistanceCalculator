@@ -4,5 +4,6 @@
     <string name="app_name">DistanceCalculator</string>
     <string name="hello_world">Hello world!</string>
     <string name="Height">Height</string>
+    <string name="HeightInputPrompt">Enter height of device above the ground:</string>
 
 </resources>
