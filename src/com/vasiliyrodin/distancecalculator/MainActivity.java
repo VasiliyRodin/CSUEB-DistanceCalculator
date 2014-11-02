@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
@@ -15,6 +16,10 @@ import android.view.Window;
 import android.content.Intent;
 import android.view.View;
 
+/**
+ * @author Vasiliy
+ *
+ */
 public class MainActivity extends Activity implements SensorEventListener {
 	private static final String TAG = "MainActivity";
 	private static final int REQUEST_CODE = 1;
@@ -38,6 +43,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_main);
         mPreview = (CameraPreview) findViewById(R.id.cameraPreview); 
         mDistanceText = (TextView) findViewById(R.id.distance);
+        setHeightButtonText();
         // get accelerometer and magnetometer sensors
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -130,10 +136,20 @@ public class MainActivity extends Activity implements SensorEventListener {
 		if(requestCode == REQUEST_CODE) {
 			if(resultCode == RESULT_OK) {
 				height = Double.valueOf(data.getData().toString());
+				setHeightButtonText();
 			}
 		}
 	}
 	
+	
+	/**
+	 * Sets the height button text to show current height
+	 */
+	private void setHeightButtonText(){
+		Button b = (Button) findViewById(R.id.setHeightButton);
+		b.setText("Height=" + String.valueOf(height));
+		
+	}
 	
 
 }
