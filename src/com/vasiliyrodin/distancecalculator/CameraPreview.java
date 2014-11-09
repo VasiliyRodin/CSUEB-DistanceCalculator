@@ -63,6 +63,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 		Log.d(TAG, "surfaceChanged Entered");
+		
+        startPreview();
+		
+	}
+
+	public void startPreview() {
 		if (mCamera == null)
 			return;
 
@@ -71,7 +77,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
           return;
         }
 
-        // stop preview before making changes
+		// stop preview before making changes
         try {
             mCamera.stopPreview();
         } catch (Exception e){
@@ -84,7 +90,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override

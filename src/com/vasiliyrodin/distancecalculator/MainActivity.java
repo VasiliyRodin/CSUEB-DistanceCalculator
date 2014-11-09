@@ -1,7 +1,16 @@
 package com.vasiliyrodin.distancecalculator;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -33,6 +43,26 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private TextView mDistanceText;
 	private double height = 5; 
 	
+	/**
+	 * Called when picture is taken. Create Bitmap and save it a file.
+	 */
+	private PictureCallback capturedIt = new PictureCallback() {
+
+	      @Override
+	      public void onPictureTaken(byte[] data, Camera camera) {
+
+	      Bitmap bitmap = BitmapFactory.decodeByteArray(data , 0, data .length);
+	      if(bitmap==null){
+	         Toast.makeText(getApplicationContext(), "not taken", Toast.LENGTH_SHORT).show();
+	      }
+	      else
+	      {
+	    	 saveBitMap(bitmap);
+	         Toast.makeText(getApplicationContext(), "taken", Toast.LENGTH_SHORT).show();    	
+	      }
+	      MainActivity.this.mPreview.startPreview();
+	   }
+	};
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	Log.d(TAG, "onCreate Entered");
@@ -53,7 +83,47 @@ public class MainActivity extends Activity implements SensorEventListener {
     
     public void onClickHeight(View view){
     	startActivityForResult(new Intent("com.vasiliyrodin.distancecalculator.InputHeight"),REQUEST_CODE);
-    }    
+    }
+    
+    /**
+     * Gets screen capture of the main view and saves it to a file.
+     * @param view
+     */
+    public void onClickCapture(View view) {
+    	
+    	// create bitmap screen capture
+    	/*Bitmap bitmap;
+    	View v1 = findViewById(R.id.mainView);
+    	v1.setDrawingCacheEnabled(true);
+    	bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+    	v1.setDrawingCacheEnabled(false);
+    	*/
+    	
+    	mCamera.takePicture(null, null, capturedIt);
+    	
+    	
+    }
+
+	private void saveBitMap(Bitmap bitmap) {
+    	// image naming and path  to include sd card  appending name you choose for file
+    	File imageFile = new File(Environment.getExternalStorageDirectory(), "distanceCalculator.jpg");   
+
+		OutputStream fout = null;
+
+    	try {
+    	    fout = new FileOutputStream(imageFile);
+    	    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
+    	    fout.flush();
+    	    fout.close();
+
+    	} catch (FileNotFoundException e) {
+    	    // TODO Auto-generated catch block
+    	    e.printStackTrace();
+    	} catch (IOException e) {
+    	    // TODO Auto-generated catch block
+    	    e.printStackTrace();
+    	}
+	}
     
     
 	private boolean safeCameraOpen() {
