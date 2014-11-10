@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -120,11 +123,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	private void saveBitMap(Bitmap bitmap) {
     	// image naming and path  to include sd card  appending name you choose for file
-    	File imageFile = new File(Environment.getExternalStorageDirectory(), "distanceCalculator.jpg");   
+    	File imageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "DistanceCalculator");   
 
 		OutputStream fout = null;
-
+		
     	try {
+    		imageDir.mkdirs();
+    		File imageFile = new File(imageDir, createFileName());
+    		
     	    fout = new FileOutputStream(imageFile);
     	    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
     	    fout.flush();
@@ -139,6 +145,13 @@ public class MainActivity extends Activity implements SensorEventListener {
     	}
 	}
 	
+	private String createFileName() {
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
+		String s = dateFormat.format(date);
+		return "dc" + s + ".jpg";
+	}
+
 	private void drawText(Bitmap bitmap, String text){
  
 		  Canvas canvas = new Canvas(bitmap);
