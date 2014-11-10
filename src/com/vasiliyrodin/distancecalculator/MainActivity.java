@@ -27,6 +27,7 @@ import android.hardware.SensorManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -136,6 +137,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     	    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
     	    fout.flush();
     	    fout.close();
+    	    sendBroadcast(new Intent(
+    	    		Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+    	    		Uri.parse("file://" + imageFile)));
 
     	} catch (FileNotFoundException e) {
     	    // TODO Auto-generated catch block
