@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -247,7 +248,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		        
 		        //Calculate the distance
 		        double distance = height*Math.tan(Math.abs(orientation[2]));
-		        mDistanceText.setText(String.valueOf(distance));
+		        DecimalFormat df = new DecimalFormat("#.##");
+		        mDistanceText.setText(df.format(distance));
 		        //Log.d(TAG, "Orientation = " + orientation[0] + " " + orientation[1] + " " + orientation[2]);
 		        //azimut = orientation[0]; // orientation contains: azimut, pitch and roll
 		      }
