@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.view.View;
 
@@ -41,9 +42,15 @@ import android.view.View;
  * @author Vasiliy
  *
  */
+/**
+ * @author Vasiliy
+ *
+ */
 public class MainActivity extends Activity implements SensorEventListener {
+	private static final String HEIGHT = "Height";
 	private static final String TAG = "MainActivity";
 	private static final int REQUEST_CODE = 1;
+	private static final String PREFS_FILE = "Prefs";
 	private Camera mCamera;
 	private CameraPreview mPreview;
 	private float[] mGravity;
@@ -53,6 +60,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private Sensor magnetometer;
 	private TextView mDistanceText;
 	private double height = 5; 
+	private SharedPreferences mPrefs;
+
 	
 	/**
 	 * Called when picture is taken. Create Bitmap and save it a file.
@@ -92,6 +101,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_main);
         mPreview = (CameraPreview) findViewById(R.id.cameraPreview); 
         mDistanceText = (TextView) findViewById(R.id.distance);
+        mPrefs = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        height = mPrefs.getFloat(HEIGHT, 5);
         setHeightButtonText();
         // get accelerometer and magnetometer sensors
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
@@ -229,6 +240,10 @@ public class MainActivity extends Activity implements SensorEventListener {
         releaseCameraAndPreview();
         mSensorManager.unregisterListener(this);
         
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putFloat(HEIGHT, (float) height);
+        ed.commit();
+        
     }
 
 	@Override
@@ -279,6 +294,31 @@ public class MainActivity extends Activity implements SensorEventListener {
 		b.setText("Height=" + String.valueOf(height));
 		
 	}
+	
+	/** Restores previously saved height or uses default value of 5
+	 * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		Log.d(TAG,"onRestoreInstanceState Entered");
+		super.onRestoreInstanceState(savedInstanceState);
+		height = savedInstanceState.getDouble(HEIGHT, 5);
+	}
+
+	
+	/** Saves Height to instance state. Allowing it to be saved if program closes.
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 *  
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		Log.d(TAG, "onSaveInstanceState Entered");
+		super.onSaveInstanceState(outState);
+		outState.putDouble(HEIGHT, height);
+		
+	}
+	
+	
 	
 
 }
