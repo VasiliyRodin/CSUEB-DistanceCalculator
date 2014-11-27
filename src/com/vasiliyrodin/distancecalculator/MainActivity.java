@@ -174,8 +174,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	
 	private void drawCrosshair(Canvas canvas) {
+		Paint paint = new Paint();
+		paint.setARGB(255, 255, 255, 255);
+		paint.setStrokeWidth(20);
 		
-		drawText(canvas, "+", canvas.getWidth()/2, canvas.getHeight()/2, Paint.Align.CENTER);
+		float w = canvas.getWidth();
+		float h = canvas.getHeight();
+		
+		canvas.drawLine(w/2 - h*0.025f, h/2, w/2 + h*0.025f, h/2, paint);
+		canvas.drawLine(w/2 , h/2- h*0.025f, w/2 , h/2+ h*0.025f, paint);
+
 	}
 
 	private void drawText(Canvas canvas, String text , int x, int y , Paint.Align align){
