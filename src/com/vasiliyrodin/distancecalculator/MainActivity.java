@@ -167,13 +167,18 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	private void drawOverlay(Bitmap bitmap) {
 		Canvas canvas = new Canvas(bitmap);
-		drawText(canvas,mDistanceText.getText().toString());
-		
+		drawText(canvas,mDistanceText.getText().toString(), canvas.getWidth(),canvas.getHeight(), Paint.Align.RIGHT);
+		drawCrosshair(canvas);
 		
 	}
 
 	
-	private void drawText(Canvas canvas, String text){
+	private void drawCrosshair(Canvas canvas) {
+		
+		drawText(canvas, "+", canvas.getWidth()/2, canvas.getHeight()/2, Paint.Align.CENTER);
+	}
+
+	private void drawText(Canvas canvas, String text , int x, int y , Paint.Align align){
  
 		  // new antialised Paint
 		  Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -182,20 +187,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 		  paint.setStyle(Style.FILL);
 		  // text size in pixels
 		  paint.setTextSize(canvas.getHeight()/10);
-		  paint.setTextAlign(Paint.Align.RIGHT);
-		  // text shadow
-		  //paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
-		 
-		  // draw text to the Canvas center
-		  // Rect bounds = new Rect();
-		  // paint.getTextBounds(text, 0, text.length(), bounds);
-		  int x = canvas.getWidth();
-		  int y = canvas.getHeight();
-		 
-		  canvas.drawText(text, x, y, paint);
+		  paint.setTextAlign(align);
 		  
-		 
-
+		  canvas.drawText(text, x, y, paint);
 	}
     
     
