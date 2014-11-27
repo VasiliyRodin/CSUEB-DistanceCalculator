@@ -16,9 +16,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	private static final String TAG = "CameraPreview";
 	SurfaceHolder mHolder;
 	private Camera mCamera;
-	private List<Size> mSupportedPreviewSizes;
-	
-
 	public CameraPreview(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		initialize(context);
@@ -110,7 +107,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		
 		if(mCamera != null) {
 			List<Size> localSizes = mCamera.getParameters().getSupportedPreviewSizes();
-			mSupportedPreviewSizes = localSizes;
 			requestLayout();
 		}
 	}

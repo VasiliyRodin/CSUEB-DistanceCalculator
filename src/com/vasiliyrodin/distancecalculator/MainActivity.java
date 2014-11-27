@@ -11,32 +11,29 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author Vasiliy
@@ -88,6 +85,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 	   }
 
 	};
+	
+	/**
+	 *	Read saved height from previous run and acquires sensors.
+	 */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	Log.d(TAG, "onCreate Entered");
@@ -117,20 +118,13 @@ public class MainActivity extends Activity implements SensorEventListener {
      * @param view
      */
     public void onClickCapture(View view) {
-    	
-    	// create bitmap screen capture
-    	/*Bitmap bitmap;
-    	View v1 = findViewById(R.id.mainView);
-    	v1.setDrawingCacheEnabled(true);
-    	bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-    	v1.setDrawingCacheEnabled(false);
-    	*/
-    	
-    	mCamera.takePicture(null, null, capturedIt);
-    	
-    	
+    	mCamera.takePicture(null, null, capturedIt);   	
     }
-
+    
+    /**
+     * Saved the bitmap taken into Distance Calculator folder.
+     * @param bitmap
+     */
 	private void saveBitMap(Bitmap bitmap) {
     	// image naming and path  to include sd card  appending name you choose for file
     	File imageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "DistanceCalculator");   
@@ -158,13 +152,21 @@ public class MainActivity extends Activity implements SensorEventListener {
     	}
 	}
 	
+	/**
+	 * Create unique file name based on time of capture.
+	 * @return
+	 */
 	private String createFileName() {
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
 		String s = dateFormat.format(date);
 		return "dc" + s + ".jpg";
 	}
-
+	
+	/**
+	 * Draws height cross hair over captured photo.
+	 * @param bitmap
+	 */
 	private void drawOverlay(Bitmap bitmap) {
 		Canvas canvas = new Canvas(bitmap);
 		drawText(canvas,mDistanceText.getText().toString(), canvas.getWidth(),canvas.getHeight(), Paint.Align.RIGHT);
@@ -172,7 +174,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 		
 	}
 
-	
+	/**
+	 * Draws crosshair at the center of the canvas.
+	 * @param canvas
+	 */
 	private void drawCrosshair(Canvas canvas) {
 		Paint paint = new Paint();
 		paint.setARGB(255, 255, 255, 255);
@@ -185,7 +190,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 		canvas.drawLine(w/2 , h/2- h*0.025f, w/2 , h/2+ h*0.025f, paint);
 
 	}
-
+	
+	/**
+	 * Draws text at the specified location with given alignment.
+	 * @param canvas
+	 * @param text
+	 * @param x
+	 * @param y
+	 * @param align
+	 */
 	private void drawText(Canvas canvas, String text , int x, int y , Paint.Align align){
  
 		  // new antialised Paint
@@ -225,7 +238,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mCamera = null;
 		}
 	}
-
+	
+	/**
+	 * Opens the camera preview and starts to listen for sensors.
+	 */
 	@Override
 	protected void onResume() {
 		Log.d(TAG, "onResume Entered");
@@ -238,6 +254,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	}
 	
+	/**
+	 * Releases camera and stop listening for sensors and saves height.
+	 */
     @Override
     protected void onPause() {
         super.onPause();
@@ -256,7 +275,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 		
 	}
-
+	
+	/**
+	 * Calculates the angle changed and uses that to calculate the distance.
+	 * Using the accelerometer and Magnetic Field sensors.
+	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
