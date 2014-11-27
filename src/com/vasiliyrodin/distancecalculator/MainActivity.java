@@ -42,6 +42,10 @@ import android.view.View;
  * @author Vasiliy
  *
  */
+/**
+ * @author Vasiliy
+ *
+ */
 public class MainActivity extends Activity implements SensorEventListener {
 	private static final String HEIGHT = "Height";
 	private static final String TAG = "MainActivity";
@@ -80,13 +84,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 	    		    bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
 	    		  }
 	    	  bitmap = bitmap.copy(bitmapConfig, true);
-	    	  drawOverlay(bitmap);
+	    	  drawText(bitmap,mDistanceText.getText().toString());
 	    	  saveBitMap(bitmap);
 	    	  Toast.makeText(getApplicationContext(), "taken", Toast.LENGTH_SHORT).show();    	
 	      }
 	      MainActivity.this.mPreview.startPreview();
 	   }
-
 	};
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -165,23 +168,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 		return "dc" + s + ".jpg";
 	}
 
-	private void drawOverlay(Bitmap bitmap) {
-		Canvas canvas = new Canvas(bitmap);
-		drawText(canvas,mDistanceText.getText().toString());
-		
-		
-	}
-
-	
-	private void drawText(Canvas canvas, String text){
+	private void drawText(Bitmap bitmap, String text){
  
+		  Canvas canvas = new Canvas(bitmap);
 		  // new antialised Paint
 		  Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		  // text color - #3D3D3D
 		  paint.setColor(Color.WHITE);
 		  paint.setStyle(Style.FILL);
 		  // text size in pixels
-		  paint.setTextSize(canvas.getHeight()/10);
+		  paint.setTextSize(bitmap.getHeight()/10);
 		  paint.setTextAlign(Paint.Align.RIGHT);
 		  // text shadow
 		  //paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
@@ -189,8 +185,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		  // draw text to the Canvas center
 		  // Rect bounds = new Rect();
 		  // paint.getTextBounds(text, 0, text.length(), bounds);
-		  int x = canvas.getWidth();
-		  int y = canvas.getHeight();
+		  int x = bitmap.getWidth();
+		  int y = bitmap.getHeight();
 		 
 		  canvas.drawText(text, x, y, paint);
 		  
